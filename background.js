@@ -21,6 +21,6 @@ browser.webRequest.onBeforeRequest.addListener(
 
     return { cancel: false };
   },
-  { urls: ["<all_urls>"] },
-  ["blocking"]
+  { urls: ["<all_urls>"] }, // Match pattern to listen on all URLs
+  ["blocking"]              // Makes this a blocking listener that can modify or cancel requests
 ); 

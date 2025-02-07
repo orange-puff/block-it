@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (url) {
       await addBlockedSite(url);
       urlInput.value = ''; // Clear the input
-      showMessageWithUndo(`Added: ${url}`, 'success', async () => {
+      showMessageWithUndo(`Added: ${url}`, async () => {
         await removeBlockedSite(url, false); // false means don't show removal message
       });
       loadBlockedSites();
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
       await browser.storage.local.set({ blockedSites });
 
       if (showMessage) {
-        showMessageWithUndo(`Added: ${url}`, 'success', async () => {
+        showMessageWithUndo(`Added: ${url}`, async () => {
           await removeBlockedSite(url, false);
         });
       }
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadBlockedSites();
 
     if (showMessage) {
-      showMessageWithUndo(`Removed: ${url}`, 'success', async () => {
+      showMessageWithUndo(`Removed: ${url}`, async () => {
         await addBlockedSite(url, false); // false means don't show add message
       });
     }
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function showMessageWithUndo(message, type, undoCallback) {
+  function showMessageWithUndo(message, undoCallback) {
     output.innerHTML = `
       <div class="message-container">
         <span>${message}</span>
