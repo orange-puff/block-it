@@ -15,13 +15,71 @@ h1 {
 
 .input-container {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
   margin: 16px 0;
-  position: relative;
+}
+
+.url-input {
+  display: flex;
+  width: 100%;
+}
+
+.time-limit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.time-input {
+  width: 60px;
+  padding: 8px 12px;
+  border: 2px solid #eaeaea;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: #f9f9f9;
+  color: #2b2b2b;
+}
+
+.time-input:hover {
+  border-color: #d0d0d0;
+  background-color: #ffffff;
+}
+
+.time-input:focus {
+  border-color: #0060df;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 96, 223, 0.1);
+}
+
+.time-select {
+  padding: 8px 12px;
+  border: 2px solid #eaeaea;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  background-color: #f9f9f9;
+  color: #2b2b2b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.time-select:hover {
+  border-color: #d0d0d0;
+  background-color: #ffffff;
+}
+
+.per-text {
+  color: #4b5563;
+  font-size: 14px;
+  padding: 0 4px;
 }
 
 input[type="text"] {
-  flex: 1;
+  width: 100%;
   padding: 10px 14px;
   border: 2px solid #eaeaea;
   border-radius: 8px;

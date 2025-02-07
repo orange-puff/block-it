@@ -15,4 +15,5 @@ Select the manifest.json file
 
 
 
-# block-it
+Todo
+1. Make it so timing is a drop down - it should be optional. The logic should be the same though, just set 0 limit

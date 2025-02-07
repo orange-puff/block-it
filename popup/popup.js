@@ -3,21 +3,31 @@ document.addEventListener('DOMContentLoaded', function () {
   const addButton = document.getElementById('addButton');
   const output = document.getElementById('output');
   const blockedSitesDiv = document.getElementById('blockedSites');
+  const timeValue = document.getElementById('timeValue');
+  const timeUnit = document.getElementById('timeUnit');
+  const perUnit = document.getElementById('perUnit');
 
   // Load blocked sites when popup opens
   loadBlockedSites();
 
   addButton.addEventListener('click', async function () {
     const url = urlInput.value.trim();
-    if (url) {
-      await addBlockedSite(url);
-      urlInput.value = ''; // Clear the input
+    const time = {
+      value: parseInt(timeValue.value) || 0,
+      timeUnit: timeUnit.value,
+      perUnit: perUnit.value
+    };
+
+    if (url && time.value > 0) {
+      await addBlockedSite(url, time);
+      urlInput.value = '';
+      timeValue.value = '';
       showMessageWithUndo(`Added: ${url}`, async () => {
-        await removeBlockedSite(url, false); // false means don't show removal message
+        await removeBlockedSite(url, false);
       });
       loadBlockedSites();
     } else {
-      showErrorMessage('Please enter a valid URL');
+      showErrorMessage(url ? 'Please enter a valid time limit' : 'Please enter a valid URL');
     }
   });
 
@@ -28,10 +38,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  async function addBlockedSite(url, showMessage = true) {
+  async function addBlockedSite(url, time, showMessage = true) {
     const { blockedSites = [] } = await browser.storage.local.get('blockedSites');
-    if (!blockedSites.includes(url)) {
-      blockedSites.push(url);
+    if (!blockedSites.some(site => site.url === url)) {
+      blockedSites.push({
+        url,
+        timeLimit: time,
+        createdAt: new Date().toISOString()
+      });
       await browser.storage.local.set({ blockedSites });
 
       if (showMessage) {
@@ -44,20 +58,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   async function removeBlockedSite(url, showMessage = true) {
     const { blockedSites = [] } = await browser.storage.local.get('blockedSites');
-    const updatedSites = blockedSites.filter(site => site !== url);
+    const updatedSites = blockedSites.filter(site => site.url !== url);
     await browser.storage.local.set({ blockedSites: updatedSites });
     loadBlockedSites();
 
     if (showMessage) {
       showMessageWithUndo(`Removed: ${url}`, async () => {
-        await addBlockedSite(url, false); // false means don't show add message
+        const site = blockedSites.find(s => s.url === url);
+        await addBlockedSite(url, site.timeLimit, false);
       });
     }
   }
 
   async function loadBlockedSites() {
     const { blockedSites = [] } = await browser.storage.local.get('blockedSites');
-    blockedSitesDiv.innerHTML = ''; // Clear current list
+    blockedSitesDiv.innerHTML = '';
 
     if (blockedSites.length === 0) {
       blockedSitesDiv.innerHTML = '<div class="empty-message">No sites blocked yet</div>';
@@ -68,16 +83,23 @@ document.addEventListener('DOMContentLoaded', function () {
       const siteItem = document.createElement('div');
       siteItem.className = 'site-item';
       siteItem.innerHTML = `
-        <span class="site-url">${site}</span>
+        <div class="site-info">
+          <span class="site-url">${site.url}</span>
+          <span class="site-limit">${formatTimeLimit(site.timeLimit)}</span>
+        </div>
         <button class="remove-btn">Remove</button>
       `;
 
       siteItem.querySelector('.remove-btn').addEventListener('click', () => {
-        removeBlockedSite(site);
+        removeBlockedSite(site.url);
       });
 
       blockedSitesDiv.appendChild(siteItem);
     });
+  }
+
+  function formatTimeLimit(timeLimit) {
+    return `${timeLimit.value} ${timeLimit.timeUnit}(s) per ${timeLimit.perUnit}`;
   }
 
   function showMessageWithUndo(message, undoCallback) {
