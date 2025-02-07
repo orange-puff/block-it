@@ -45,6 +45,7 @@ async function trackUsage(hostname) {
     usage.totalTime += now - new Date(usage.startTime);
   }
   usage.startTime = now.toISOString();
+  console.log(usage);
 
   await browser.storage.local.set({ [periodKey]: usage });
   return usage.totalTime;
