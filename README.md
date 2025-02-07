@@ -15,4 +15,7 @@ Select the manifest.json file
 
 
 
-# block-it
+Todo
+1. Make it so timing is a drop down - it should be optional. The logic should be the same though, just set 0 limit
+2. Add cleanup code, meaning cleanup usage after it has been removed
+3. make sure timing logic works; I think it's fucked

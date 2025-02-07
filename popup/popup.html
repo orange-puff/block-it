@@ -10,7 +10,21 @@
   <div class="container">
     <h1>Site Blocker</h1>
     <div class="input-container">
-      <input type="text" id="urlInput" placeholder="reddit.com" autocomplete="off" spellcheck="false">
+      <div class="url-input">
+        <input type="text" id="urlInput" placeholder="reddit.com" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="time-limit">
+        <input type="number" id="timeValue" min="1" placeholder="30" class="time-input">
+        <select id="timeUnit" class="time-select">
+          <option value="minute">minute(s)</option>
+          <option value="hour">hour(s)</option>
+        </select>
+        <span class="per-text">per</span>
+        <select id="perUnit" class="time-select">
+          <option value="hour">hour(s)</option>
+          <option value="day">day(s)</option>
+        </select>
+      </div>
       <button id="addButton">Block Site</button>
     </div>
     <div id="output"></div>
